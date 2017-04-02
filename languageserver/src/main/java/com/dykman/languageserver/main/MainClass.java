@@ -2,6 +2,7 @@ package com.dykman.languageserver.main;
 
 import com.dykman.languageserver.core.AnalysisResult;
 import com.dykman.languageserver.core.LanguageServer;
+import com.dykman.languageserver.util.PositionUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -18,8 +19,9 @@ public class MainClass {
 
     private static void usage(String msg) {
         System.err.println(msg);
-        System.err.println("Usage: ... <LOCATION> <JAVA_FILE_PATH>");
-        System.err.println("   example: java -jar language-server-x.y.jar 15 /tmp/Sample.java");
+        System.err.println("Usage: ... <LOCATION>|<LINE:COLUM> <JAVA_FILE_PATH>");
+        System.err.println("   example: java -jar language-server-x.y.jar 60 /tmp/Sample.java");
+        System.err.println("   example: java -jar language-server-x.y.jar 5:19 /tmp/Sample.java");
         System.exit(1);
     }
 
@@ -45,21 +47,41 @@ public class MainClass {
             return;
         }
 
-        // Parse location
-        final int location;
-        try {
-            location = Integer.valueOf(args[0]);
-        } catch (NumberFormatException e) {
-            usage(String.format("Invalid int '%s'", args[0]));
-            return;
-        }
-
         // Get source
         final String source;
         try {
             source = sourceFileAsString(new File(args[1]));
         } catch (RuntimeException e) {
             usage(e.getMessage());
+            return;
+        }
+
+        // Parse location
+        final int location;
+        final String[] split = args[0].split(":", Integer.MAX_VALUE);
+        if (split.length == 2) {
+            // Format 'line:column'
+            int line;
+            int column;
+            try {
+                 line = Integer.valueOf(split[0]);
+                 column = Integer.valueOf(split[1]);
+            } catch (NumberFormatException e) {
+                usage(String.format("Invalid line:column '%s'", args[0]));
+                return;
+            }
+            location = PositionUtil.position(source, line, column);
+        } else if (split.length == 1) {
+            // Format 'location'
+            try {
+                location = Integer.valueOf(args[0]);
+            } catch (NumberFormatException e) {
+                usage(String.format("Invalid location '%s'", args[0]));
+                return;
+            }
+        } else {
+            // Unknown format
+            usage(String.format("Invalid location|line:column '%s'", args[0]));
             return;
         }
 
@@ -76,6 +98,7 @@ public class MainClass {
             return;
         }
 
+        // Output result
         if (analysisResult.isPresent()) {
             System.out.println(toJsonString(analysisResult.get()));
         } else {
