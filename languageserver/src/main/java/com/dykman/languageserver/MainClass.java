@@ -7,12 +7,12 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Optional;
 
-public class Main {
+public class MainClass {
 
     private static void usage(String msg) {
         System.err.println(msg);
-        System.err.println("Usage: $0 <LOCATION> <JAVA_FILE_PATH>");
-        System.err.println("   example: $0 15 /tmp/Sample.java");
+        System.err.println("Usage: ... <LOCATION> <JAVA_FILE_PATH>");
+        System.err.println("   example: java -jar language-server-x.y.jar 15 /tmp/Sample.java");
         System.exit(1);
     }
 
@@ -48,13 +48,16 @@ public class Main {
             return;
         }
 
+        // Create language server
         LanguageServer languageServer = new LanguageServer(source);
 
+        // Run analysis
         final Optional<AnalysisResult> analysisResult;
         try {
             analysisResult = languageServer.position(location);
         } catch (RuntimeException e) {
-            usage(String.format("Something went wrong: %s", e.getMessage()));
+            System.err.println(String.format("Something went wrong: %s", e.getMessage()));
+            System.exit(1);
             return;
         }
 
