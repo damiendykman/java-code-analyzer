@@ -1,5 +1,8 @@
 package com.dykman.languageserver;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.io.Files;
 
 import java.io.File;
@@ -8,6 +11,8 @@ import java.nio.charset.Charset;
 import java.util.Optional;
 
 public class MainClass {
+
+    private static ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
     private static void usage(String msg) {
         System.err.println(msg);
@@ -21,6 +26,14 @@ public class MainClass {
             return Files.toString(sourceFile, Charset.defaultCharset());
         } catch (IOException e) {
             throw new RuntimeException(String.format("File: '%s' not found", sourceFile.getAbsolutePath()), e);
+        }
+    }
+
+    private static String toJsonString(Object object) {
+        try {
+            return mapper.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -62,7 +75,7 @@ public class MainClass {
         }
 
         if (analysisResult.isPresent()) {
-            System.out.println(analysisResult.get());
+            System.out.println(toJsonString(analysisResult.get()));
         } else {
             System.err.println(String.format("Got nothing for location %s", location));
         }
