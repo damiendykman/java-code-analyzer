@@ -1,14 +1,13 @@
 package com.dykman.languageserver;
 
 import com.google.common.io.Files;
-import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Optional;
 
-public class Server {
+public class Main {
 
     private static void usage(String msg) {
         System.err.println(msg);
