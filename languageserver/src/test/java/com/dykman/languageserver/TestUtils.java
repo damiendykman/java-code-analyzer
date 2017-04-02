@@ -13,7 +13,7 @@ public class TestUtils {
     /**
      * Return a position given a line and a column
      */
-    public int position(String str, int line, int column) {
+    public static int position(String str, int line, int column) {
         // WARNING: should check line and column within bounds and throw
 
         // Sum the lengths of the lines above cursor
@@ -27,7 +27,7 @@ public class TestUtils {
     /**
      * Return a line and column given a position
      */
-    public Pair<Integer, Integer> lineColumn(String str, int pos) {
+    public static Pair<Integer, Integer> lineColumn(String str, int pos) {
         int line = 1;
         Integer column = 0;
         int fullLineOffset = 0;
