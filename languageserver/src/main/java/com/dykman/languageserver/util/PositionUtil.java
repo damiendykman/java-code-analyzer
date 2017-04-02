@@ -1,14 +1,12 @@
-package com.dykman.languageserver;
+package com.dykman.languageserver.util;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.testng.annotations.Test;
 
 import java.util.Arrays;
 
-import static org.testng.Assert.assertEquals;
 
-public class TestUtils {
+public class PositionUtil {
 
     /**
      * Return a position given a line and a column.
@@ -49,21 +47,5 @@ public class TestUtils {
         }
 
         return new ImmutablePair<>(line, column);
-    }
-
-    @Test
-    private void testBothWays() {
-        String str = "hello\n\nworld\n";
-        checkBothWays(str, 1, 1, 1);
-        checkBothWays(str, 5, 1, 5);
-        checkBothWays(str, 6, 1, 6);
-        checkBothWays(str, 7, 2, 1);
-        checkBothWays(str, 8, 3, 1);
-        checkBothWays(str, 9, 3, 2);
-    }
-
-    private void checkBothWays(String str, int position, int line, int column) {
-        assertEquals(position(str, line, column), position);
-        assertEquals(lineColumn(str, position), new ImmutablePair<>(line, column));
     }
 }

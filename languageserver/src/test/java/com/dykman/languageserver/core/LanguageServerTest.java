@@ -1,5 +1,6 @@
-package com.dykman.languageserver;
+package com.dykman.languageserver.core;
 
+import com.dykman.languageserver.util.PositionUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -131,10 +132,10 @@ public class LanguageServerTest {
     }
 
     private int position(int line, int column) {
-        return TestUtils.position(source, line, column);
+        return PositionUtil.position(source, line, column);
     }
 
     private Pair<Integer, Integer> lineColumn(int pos) {
-        return TestUtils.lineColumn(source, pos);
+        return PositionUtil.lineColumn(source, pos);
     }
 }

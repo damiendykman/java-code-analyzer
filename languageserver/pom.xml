@@ -96,7 +96,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.dykman.languageserver.MainClass</mainClass>
+                            <mainClass>com.dykman.languageserver.main.MainClass</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -109,7 +109,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.dykman.languageserver.MainClass</mainClass>
+                            <mainClass>com.dykman.languageserver.main.MainClass</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

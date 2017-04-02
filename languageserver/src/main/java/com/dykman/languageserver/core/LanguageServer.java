@@ -1,15 +1,13 @@
-package com.dykman.languageserver;
+package com.dykman.languageserver.core;
 
-import com.google.common.io.Files;
+import com.dykman.languageserver.ast.LeafFinderAstVisitor;
+import com.dykman.languageserver.ast.MapperAstVisitor;
 import org.apache.commons.collections4.ListUtils;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

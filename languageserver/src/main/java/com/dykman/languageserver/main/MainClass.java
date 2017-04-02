@@ -1,5 +1,7 @@
-package com.dykman.languageserver;
+package com.dykman.languageserver.main;
 
+import com.dykman.languageserver.core.AnalysisResult;
+import com.dykman.languageserver.core.LanguageServer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
