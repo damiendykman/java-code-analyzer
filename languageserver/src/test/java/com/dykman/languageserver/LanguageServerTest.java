@@ -27,21 +27,34 @@ public class LanguageServerTest {
     }
 
     @Test
-    public void testMethodInvocation() {
-        AnalysisResult analysisResult;
-
+    public void testLocalMethodInvocation() {
         // Method invocation of method declared locally
-        analysisResult = languageServer.position(position(15, 14)).get();
+        AnalysisResult analysisResult = languageServer.position(position(15, 14)).get();
         checkAnalysisResult(analysisResult, "public int doStuff()",
                             new ImmutablePair<>(5, 16),
                             Arrays.asList(15, 9, 17, 13));
+    }
 
+    @Test
+    public void testExternalMethodInvocation() {
         // Method invocation of method declared externally
-        analysisResult = languageServer.position(position(8, 13)).get();
+        AnalysisResult analysisResult = languageServer.position(position(8, 23)).get();
         checkAnalysisResult(analysisResult,
                             "public int compareTo(java.lang.Integer)",
                             null,
-                            Arrays.asList(8, 11));
+                            Arrays.asList(7, 17));
+    }
+
+    @Test
+    // TODO: better test name
+    public void testVariable() {
+        // Method invocation of method declared externally
+        AnalysisResult analysisResult = languageServer.position(position(7, 22)).get();
+        // TODO: better signature
+        checkAnalysisResult(analysisResult,
+                            "java.lang.Integer myInteger[pos: unused][id:0]",
+                            null,
+                            Arrays.asList(8, 9, 8, 37));
     }
 
     private void checkAnalysisResult(AnalysisResult actual, String toolTip,

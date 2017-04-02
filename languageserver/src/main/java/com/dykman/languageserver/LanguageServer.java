@@ -22,6 +22,8 @@ public class LanguageServer {
     final CompilationUnit compilationUnit;
     final Map<IMethodBinding, SimpleName> methodBindingToDeclaration;
     final Map<IMethodBinding, List<SimpleName>> methodBindingToRefs;
+    final Map<IVariableBinding, SimpleName> variableBindingToDeclaration;
+    final Map<IVariableBinding, List<SimpleName>> variableBindingToRefs;
 
     public LanguageServer(String source) {
         ASTParser parser = ASTParser.newParser(AST.JLS8);
@@ -46,6 +48,8 @@ public class LanguageServer {
         compilationUnit.accept(mapperAstVisitor);
         methodBindingToRefs = mapperAstVisitor.getMethodBindingToRefs();
         methodBindingToDeclaration = mapperAstVisitor.getMethodBindingToDeclaration();
+        variableBindingToRefs = mapperAstVisitor.getVariableBindingToRefs();
+        variableBindingToDeclaration = mapperAstVisitor.getVariableBindingToDeclaration();
     }
 
     // TODO: move
@@ -89,6 +93,19 @@ public class LanguageServer {
 
                 // Declaration position
                 Optional.ofNullable(methodBindingToDeclaration.get(methodBinding))
+                        .map(SimpleName::getStartPosition)
+                        .ifPresent(analysisResult::setDeclarationPosition);
+            } else if (binding instanceof IVariableBinding) {
+                IVariableBinding variableBinding = (IVariableBinding) binding;
+
+                // Reference positions
+                List<Integer> referencePositions = ListUtils.emptyIfNull(variableBindingToRefs.get(variableBinding)).stream()
+                        .map(SimpleName::getStartPosition)
+                        .collect(Collectors.toList());
+                analysisResult.setReferencePositions(referencePositions);
+
+                // Declaration position
+                Optional.ofNullable(variableBindingToDeclaration.get(variableBinding))
                         .map(SimpleName::getStartPosition)
                         .ifPresent(analysisResult::setDeclarationPosition);
             } else {

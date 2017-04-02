@@ -4,8 +4,8 @@ public class Sample {
 
     public int doStuff() {
 
-        Integer j = new Integer(10);
-        j.compareTo(12);
+        Integer myInteger = new Integer(10);
+        myInteger.compareTo(12);    myInteger.byteValue();
         return 0;
     }
 
