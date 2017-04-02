@@ -7,9 +7,9 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Collections;
+import java.util.List;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertEqualsNoOrder;
 
 public class LanguageServerTest {
 
@@ -20,7 +20,7 @@ public class LanguageServerTest {
     @BeforeClass
     public void setUp() throws URISyntaxException, IOException {
         String source = IOUtils.toString(getClass().getClassLoader().getResourceAsStream(SAMPLE_JAVA_FILE));
-        languageServer = new LanguageServer(source, SAMPLE_JAVA_FILE);
+        languageServer = new LanguageServer(source);
     }
 
     @Test
@@ -28,8 +28,12 @@ public class LanguageServerTest {
         AnalyzisResult analyzisResult = languageServer.position(205).get();
 
         // TODO: cleanup space
-        assertEquals(analyzisResult.getToolTip(), "public int doStuff() ");
-        assertEquals(analyzisResult.getDeclarationPosition(), 55);
-        assertEquals(analyzisResult.getReferencePositions(), Collections.singletonList(202));
+        checkAnalyzisResult(analyzisResult, "public int doStuff() ", 55, Collections.singletonList(202));
+    }
+
+    private void checkAnalyzisResult(AnalyzisResult actual, String toolTip, int declPos, List<Integer> refPos) {
+        assertEquals(actual.getToolTip(), toolTip);
+        assertEquals(actual.getDeclarationPosition(), declPos);
+        assertEquals(actual.getReferencePositions(), refPos);
     }
 }

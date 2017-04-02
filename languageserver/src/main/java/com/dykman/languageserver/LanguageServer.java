@@ -23,15 +23,16 @@ public class LanguageServer {
     final Map<IMethodBinding, SimpleName> methodBindingToDeclaration;
     final Map<IMethodBinding, List<SimpleName>> methodBindingToRefs;
 
-    public LanguageServer(String source, String unitName) {
+    public LanguageServer(String source) {
         ASTParser parser = ASTParser.newParser(AST.JLS8);
         parser.setResolveBindings(true);
         parser.setBindingsRecovery(true);
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
         parser.setCompilerOptions(JavaCore.getOptions());
-        parser.setUnitName(unitName);
+        // Dummy name at this point
+        parser.setUnitName("Blabla.java");
 
-        String[] sources = {"/Users/damiendykman/git/compilation/InMemoryJavaCompiler/languageserver/src/main/java"};
+        String[] sources = {"/Users/damiendykman/git/damiendykman/compilation/languageserver/src/main/java"};
         // TODO: needed?
         String[] classpath = {"/Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/jre/lib/rt.jar"};
         parser.setEnvironment(classpath, sources, new String[] {"UTF-8"}, true);
