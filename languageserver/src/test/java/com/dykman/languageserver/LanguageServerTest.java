@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class LanguageServerTest {
 
@@ -28,17 +29,16 @@ public class LanguageServerTest {
 
     @Test
     public void testLocalMethodInvocation() {
-        // Method invocation of method declared locally
+        String actualToolTip = "public int doStuff()";
+        Pair<Integer, Integer> actualDeclaration = new ImmutablePair<>(5, 16);
+        List<Integer> actualRefs = Arrays.asList(15, 9, 17, 13, 23, 16);
+
         AnalysisResult analysisResult = languageServer.position(position(15, 14)).get();
-        checkAnalysisResult(analysisResult, "public int doStuff()",
-                            new ImmutablePair<>(5, 16),
-                            Arrays.asList(15, 9, 17, 13));
+        checkAnalysisResult(analysisResult, actualToolTip, actualDeclaration, actualRefs);
     }
 
     @Test
     public void testExternalMethodInvocation() {
-        // Method invocation of method declared externally
-
         String actualToolTip = "public int compareTo(java.lang.Integer)";
         Pair<Integer, Integer> actualDeclaration = null;
         List<Integer> actualRefs = Arrays.asList(8, 19);
@@ -49,14 +49,13 @@ public class LanguageServerTest {
 
     @Test
     public void testVariable() {
-        String actualToolTip = "java.lang.Integer myInteger[pos: unused][id:0]";
+        String actualToolTip = "java.lang.Integer myInteger";
         // TODO: shouldn't be null....
         Pair<Integer, Integer> actualDeclaration = null;
         List<Integer> actualRefs = Arrays.asList(8, 9, 8, 37);
 
         // Variable declaration
         AnalysisResult analysisResult = languageServer.position(position(7, 22)).get();
-        // TODO: better signature
         checkAnalysisResult(analysisResult, actualToolTip, actualDeclaration, actualRefs);
 
         // Variable reference
@@ -66,17 +65,7 @@ public class LanguageServerTest {
 
     @Test
     public void testType() {
-        // TODO: better signature
-        String actualToolTip = "(id=NoId)\n" +
-                               "public class sample.Sample\n" +
-                               "\textends java.lang.Object\n" +
-                               "/*   fields   */\n" +
-                               "int i\n" +
-                               "/*   methods   */\n" +
-                               "public void <init>() \n" +
-                               "public int doStuff() \n" +
-                               "public static void main(java.lang.String[]) \n" +
-                               "int someMethod()";
+        String actualToolTip = "public class sample.Sample";
         Pair<Integer, Integer> actualDeclaration = new ImmutablePair<>(3,14);
         List<Integer> actualRefs = Arrays.asList(22, 9, 22, 29);
 
@@ -88,7 +77,7 @@ public class LanguageServerTest {
     private void checkAnalysisResult(AnalysisResult actual, String toolTip,
                                      Pair<Integer, Integer> declLineColum,
                                      List<Integer> refLineColumns) {
-        assertEquals(actual.getToolTip(), toolTip);
+        assertTrue(actual.getToolTip().contains(toolTip));
 
         if (declLineColum != null) {
             // Offset by 1 (column vs. string index)

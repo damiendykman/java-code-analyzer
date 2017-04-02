@@ -1,7 +1,6 @@
 package com.dykman.languageserver;
 
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.internal.compiler.lookup.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

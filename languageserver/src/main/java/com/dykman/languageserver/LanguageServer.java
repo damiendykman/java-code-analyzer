@@ -74,8 +74,8 @@ public class LanguageServer {
             SimpleName simpleName = (SimpleName) node;
             final IBinding binding = simpleName.resolveBinding();
 
-            // This is more or less the signature we need (caveat, might have trailing spaces)
-            final String signature = binding.toString().trim();
+            // This is more or less the signature we need plus a bunch of stuff
+            final String signature = binding.toString();
             analysisResult.setToolTip(signature);
 
             // Reference positions
