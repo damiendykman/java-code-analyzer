@@ -18,6 +18,11 @@ public class Sample {
         return 0;
     }
 
+    public static void main(String[] args) {
+        Sample sample = new Sample();
+        sample.doStuff();
+    }
+
     // Supported:
     // - variable
     // - type

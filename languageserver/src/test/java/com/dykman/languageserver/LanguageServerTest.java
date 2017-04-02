@@ -38,23 +38,51 @@ public class LanguageServerTest {
     @Test
     public void testExternalMethodInvocation() {
         // Method invocation of method declared externally
+
+        String actualToolTip = "public int compareTo(java.lang.Integer)";
+        Pair<Integer, Integer> actualDeclaration = null;
+        List<Integer> actualRefs = Arrays.asList(8, 19);
+
         AnalysisResult analysisResult = languageServer.position(position(8, 23)).get();
-        checkAnalysisResult(analysisResult,
-                            "public int compareTo(java.lang.Integer)",
-                            null,
-                            Arrays.asList(8, 19));
+        checkAnalysisResult(analysisResult, actualToolTip, actualDeclaration, actualRefs);
     }
 
     @Test
-    // TODO: better test name
     public void testVariable() {
-        // Method invocation of method declared externally
+        String actualToolTip = "java.lang.Integer myInteger[pos: unused][id:0]";
+        // TODO: shouldn't be null....
+        Pair<Integer, Integer> actualDeclaration = null;
+        List<Integer> actualRefs = Arrays.asList(8, 9, 8, 37);
+
+        // Variable declaration
         AnalysisResult analysisResult = languageServer.position(position(7, 22)).get();
         // TODO: better signature
-        checkAnalysisResult(analysisResult,
-                            "java.lang.Integer myInteger[pos: unused][id:0]",
-                            null,
-                            Arrays.asList(8, 9, 8, 37));
+        checkAnalysisResult(analysisResult, actualToolTip, actualDeclaration, actualRefs);
+
+        // Variable reference
+        analysisResult = languageServer.position(position(8, 12)).get();
+        checkAnalysisResult(analysisResult, actualToolTip, actualDeclaration, actualRefs);
+    }
+
+    @Test
+    public void testType() {
+        // TODO: better signature
+        String actualToolTip = "(id=NoId)\n" +
+                               "public class sample.Sample\n" +
+                               "\textends java.lang.Object\n" +
+                               "/*   fields   */\n" +
+                               "int i\n" +
+                               "/*   methods   */\n" +
+                               "public void <init>() \n" +
+                               "public int doStuff() \n" +
+                               "public static void main(java.lang.String[]) \n" +
+                               "int someMethod()";
+        Pair<Integer, Integer> actualDeclaration = new ImmutablePair<>(3,14);
+        List<Integer> actualRefs = Arrays.asList(22, 9, 22, 29);
+
+        // Type declaration
+        AnalysisResult analysisResult = languageServer.position(position(3, 16)).get();
+        checkAnalysisResult(analysisResult, actualToolTip, actualDeclaration, actualRefs);
     }
 
     private void checkAnalysisResult(AnalysisResult actual, String toolTip,
@@ -68,9 +96,9 @@ public class LanguageServerTest {
                          position(declLineColum.getLeft(), declLineColum.getRight()) - 1);
         }
 
-        final List<Pair<Integer, Integer>> actualRefLineColumnPairs = actual.getReferencePositions().stream()
+        final Set<Pair<Integer, Integer>> actualRefLineColumnPairs = actual.getReferencePositions().stream()
                 .map(this::lineColumn)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
         // Transform to set of pair because pair order does not matter
         assertEquals(actualRefLineColumnPairs, lineColumnPairs(refLineColumns));

@@ -11,25 +11,15 @@ public class MapperAstVisitor extends ASTVisitor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MapperAstVisitor.class);
 
-    private final Map<IMethodBinding, List<SimpleName>> methodBindingToRefs = new HashMap<>();
-    private final Map<IMethodBinding, SimpleName> methodBindingToDeclaration = new HashMap<>();
-    private final Map<IVariableBinding, List<SimpleName>> variableBindingToRefs = new HashMap<>();
-    private final Map<IVariableBinding, SimpleName> variableBindingToDeclaration = new HashMap<>();
+    private final Map<IBinding, List<SimpleName>> bindingToRefs = new HashMap<>();
+    private final Map<IBinding, SimpleName> bindingToDeclaration = new HashMap<>();
 
-    public Map<IMethodBinding, List<SimpleName>> getMethodBindingToRefs() {
-        return methodBindingToRefs;
+    public Map<IBinding, List<SimpleName>> getBindingToRefs() {
+        return bindingToRefs;
     }
 
-    public Map<IMethodBinding, SimpleName> getMethodBindingToDeclaration() {
-        return methodBindingToDeclaration;
-    }
-
-    public Map<IVariableBinding, List<SimpleName>> getVariableBindingToRefs() {
-        return variableBindingToRefs;
-    }
-
-    public Map<IVariableBinding, SimpleName> getVariableBindingToDeclaration() {
-        return variableBindingToDeclaration;
+    public Map<IBinding, SimpleName> getBindingToDeclaration() {
+        return bindingToDeclaration;
     }
 
     @Override
@@ -37,49 +27,27 @@ public class MapperAstVisitor extends ASTVisitor {
         boolean isDeclaration = node.isDeclaration();
         IBinding binding = node.resolveBinding();
 
-        if (binding instanceof IMethodBinding) {
-            IMethodBinding methodBinding = (IMethodBinding) binding;
+        if (binding instanceof IMethodBinding
+            || binding instanceof IVariableBinding
+            || binding instanceof ITypeBinding
+            || binding instanceof IPackageBinding) {
             if (isDeclaration) {
-                if (methodBindingToDeclaration.get(methodBinding) != null) {
+                if (bindingToDeclaration.get(binding) != null) {
                     throw new IllegalStateException(String.format("SimpleName '%s' already set", node));
                 }
-                methodBindingToDeclaration.put(methodBinding, node);
+                bindingToDeclaration.put(binding, node);
             } else {
-                List<SimpleName> simpleNames = Optional.ofNullable(methodBindingToRefs.get(methodBinding))
+                List<SimpleName> simpleNames = Optional.ofNullable(bindingToRefs.get(binding))
                         .orElseGet(ArrayList::new);
                 simpleNames.add(node);
-                methodBindingToRefs.put(methodBinding, simpleNames);
+                bindingToRefs.put(binding, simpleNames);
             }
-        } else if (binding instanceof IVariableBinding) {
-            IVariableBinding variableBinding = (IVariableBinding) binding;
-            if (isDeclaration) {
-                if (variableBindingToDeclaration.get(variableBinding) != null) {
-                    throw new IllegalStateException(String.format("SizmpleName '%s' already set", node));
-                }
-                variableBindingToDeclaration.put(variableBinding, node);
-            } else {
-                List<SimpleName> simpleNames = Optional.ofNullable(variableBindingToRefs.get(variableBinding))
-                        .orElseGet(ArrayList::new);
-                simpleNames.add(node);
-                variableBindingToRefs.put(variableBinding, simpleNames);
-            }
-        } else if (binding instanceof TypeBinding) {
-            // TODO
-        } else if (binding instanceof PackageBinding) {
-            // TODO
         } else {
             LOGGER.warn("Unsupported binding: {}", binding);
         }
 
         return super.visit(node);
     }
-
-//    void add(IBinding binding, ) {
-//        if (bindingindingToDeclaration.get(methodBinding) != null) {
-//            throw new IllegalStateException(String.format("SimpleName '%s' already set", node));
-//        }
-//        bindingToDeclaration.put(methodBinding, node);
-//    }
 
     @Override
     public boolean visit(ClassInstanceCreation node) {

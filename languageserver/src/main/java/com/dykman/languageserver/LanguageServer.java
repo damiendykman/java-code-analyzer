@@ -20,10 +20,8 @@ public class LanguageServer {
     private static final Logger LOGGER = LoggerFactory.getLogger(LanguageServer.class);
 
     final CompilationUnit compilationUnit;
-    final Map<IMethodBinding, SimpleName> methodBindingToDeclaration;
-    final Map<IMethodBinding, List<SimpleName>> methodBindingToRefs;
-    final Map<IVariableBinding, SimpleName> variableBindingToDeclaration;
-    final Map<IVariableBinding, List<SimpleName>> variableBindingToRefs;
+    final Map<IBinding, SimpleName> bindingToDeclaration;
+    final Map<IBinding, List<SimpleName>> bindingToRefs;
 
     public LanguageServer(String source) {
         ASTParser parser = ASTParser.newParser(AST.JLS8);
@@ -46,10 +44,8 @@ public class LanguageServer {
 
         MapperAstVisitor mapperAstVisitor = new MapperAstVisitor();
         compilationUnit.accept(mapperAstVisitor);
-        methodBindingToRefs = mapperAstVisitor.getMethodBindingToRefs();
-        methodBindingToDeclaration = mapperAstVisitor.getMethodBindingToDeclaration();
-        variableBindingToRefs = mapperAstVisitor.getVariableBindingToRefs();
-        variableBindingToDeclaration = mapperAstVisitor.getVariableBindingToDeclaration();
+        bindingToDeclaration = mapperAstVisitor.getBindingToDeclaration();
+        bindingToRefs = mapperAstVisitor.getBindingToRefs();
     }
 
     // TODO: move
@@ -82,35 +78,17 @@ public class LanguageServer {
             final String signature = binding.toString().trim();
             analysisResult.setToolTip(signature);
 
-            if (binding instanceof IMethodBinding) {
-                IMethodBinding methodBinding = (IMethodBinding) binding;
+            // Reference positions
+            List<Integer> referencePositions = ListUtils.emptyIfNull(bindingToRefs.get(binding)).stream()
+                    .map(SimpleName::getStartPosition)
+                    .collect(Collectors.toList());
+            analysisResult.setReferencePositions(referencePositions);
 
-                // Reference positions
-                List<Integer> referencePositions = ListUtils.emptyIfNull(methodBindingToRefs.get(methodBinding)).stream()
-                        .map(SimpleName::getStartPosition)
-                        .collect(Collectors.toList());
-                analysisResult.setReferencePositions(referencePositions);
+            // Declaration position
+            Optional.ofNullable(bindingToDeclaration.get(binding))
+                    .map(SimpleName::getStartPosition)
+                    .ifPresent(analysisResult::setDeclarationPosition);
 
-                // Declaration position
-                Optional.ofNullable(methodBindingToDeclaration.get(methodBinding))
-                        .map(SimpleName::getStartPosition)
-                        .ifPresent(analysisResult::setDeclarationPosition);
-            } else if (binding instanceof IVariableBinding) {
-                IVariableBinding variableBinding = (IVariableBinding) binding;
-
-                // Reference positions
-                List<Integer> referencePositions = ListUtils.emptyIfNull(variableBindingToRefs.get(variableBinding)).stream()
-                        .map(SimpleName::getStartPosition)
-                        .collect(Collectors.toList());
-                analysisResult.setReferencePositions(referencePositions);
-
-                // Declaration position
-                Optional.ofNullable(variableBindingToDeclaration.get(variableBinding))
-                        .map(SimpleName::getStartPosition)
-                        .ifPresent(analysisResult::setDeclarationPosition);
-            } else {
-                LOGGER.warn("Ignoring binding {}", binding);
-            }
             return Optional.of(analysisResult);
         }
 
