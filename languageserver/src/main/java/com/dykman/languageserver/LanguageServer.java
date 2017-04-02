@@ -19,9 +19,9 @@ public class LanguageServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LanguageServer.class);
 
-    final CompilationUnit compilationUnit;
-    final Map<IBinding, SimpleName> bindingToDeclaration;
-    final Map<IBinding, List<SimpleName>> bindingToRefs;
+    private final CompilationUnit compilationUnit;
+    private final Map<IBinding, SimpleName> bindingToDeclaration;
+    private final Map<IBinding, List<SimpleName>> bindingToRefs;
 
     public LanguageServer(String source) {
         ASTParser parser = ASTParser.newParser(AST.JLS8);

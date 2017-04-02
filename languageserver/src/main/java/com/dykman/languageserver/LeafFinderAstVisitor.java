@@ -6,7 +6,6 @@ import org.eclipse.jdt.core.dom.*;
 public class LeafFinderAstVisitor extends ASTVisitor {
 
     private final int position;
-
     private ASTNode bestNode;
     private int smallestLength = Integer.MAX_VALUE;
 

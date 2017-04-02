@@ -18,11 +18,11 @@ public class TestUtils {
         // WARNING: should check line and column within bounds and throw
 
         // Sum the lengths of the lines above cursor
-        int fullLineOffsset = Arrays.asList(str.split("\n")).stream()
+        int fullLineOffset = Arrays.asList(str.split("\n")).stream()
                 .limit(line - 1)
                 .mapToInt(l -> l.length() + 1) // Adding '\n' to each line
                 .sum();
-        return fullLineOffsset + column;
+        return fullLineOffset + column;
     }
 
     /**
@@ -31,7 +31,7 @@ public class TestUtils {
      */
     public static Pair<Integer, Integer> lineColumn(String str, int pos) {
         int line = 1;
-        Integer column = 0;
+        Integer column = null;
         int fullLineOffset = 0;
         for (String lineStr : str.split("\n")) {
             if (lineStr.length() + 1 >= pos - fullLineOffset) {

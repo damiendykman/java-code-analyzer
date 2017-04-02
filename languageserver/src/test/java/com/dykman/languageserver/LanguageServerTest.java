@@ -100,17 +100,17 @@ public class LanguageServerTest {
     }
 
     private void checkAnalysisResult(AnalysisResult actual, String toolTip,
-                                     Pair<Integer, Integer> declLineColum,
+                                     Pair<Integer, Integer> declLineColumn,
                                      List<Integer> refLineColumns) {
         assertTrue(actual.getToolTip().contains(toolTip),
                    String.format("'%s' not contained in '%s'", toolTip, actual.getToolTip()));
 
-        if (declLineColum == null) {
+        if (declLineColumn == null) {
             assertNull(actual.getDeclarationPosition());
         } else {
             // Offset by 1 (column vs. string index)
             assertEquals(actual.getDeclarationPosition().intValue(),
-                         position(declLineColum.getLeft(), declLineColum.getRight()) - 1);
+                         position(declLineColumn.getLeft(), declLineColumn.getRight()) - 1);
         }
 
         final Set<Pair<Integer, Integer>> actualRefLineColumnPairs = actual.getReferencePositions().stream()
