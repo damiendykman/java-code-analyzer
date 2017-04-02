@@ -29,17 +29,15 @@ public class LanguageServer {
         parser.setBindingsRecovery(true);
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
         parser.setCompilerOptions(JavaCore.getOptions());
-        // Dummy name at this point
-        parser.setUnitName("Blabla.java");
 
-        String[] sources = {"/Users/damiendykman/git/damiendykman/compilation/languageserver/src/main/java"};
-        // TODO: needed?
-        String[] classpath = {"/Library/Java/JavaVirtualMachines/jdk1.8.0_60.jdk/Contents/Home/jre/lib/rt.jar"};
+        // Dummy values at this point
+        parser.setUnitName("Blabla.java");
+        String[] sources = { "." };
+        String[] classpath = {};
         parser.setEnvironment(classpath, sources, new String[] {"UTF-8"}, true);
 
         parser.setSource(source.toCharArray());
 
-        // TODO: add error if any
         compilationUnit = (CompilationUnit) parser.createAST(null);
 
         MapperAstVisitor mapperAstVisitor = new MapperAstVisitor();
