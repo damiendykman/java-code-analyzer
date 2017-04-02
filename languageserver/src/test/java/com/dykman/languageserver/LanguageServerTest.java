@@ -1,16 +1,15 @@
 package com.dykman.languageserver;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.testng.Assert.assertEquals;
 
@@ -29,21 +28,31 @@ public class LanguageServerTest {
 
     @Test
     public void testMethodInvocation() {
-        AnalyzisResult analyzisResult = languageServer.position(position(15, 14)).get();
-        checkAnalyzisResult(analyzisResult, "public int doStuff()", 5, 15, Arrays.asList(15, 8));
+        AnalysisResult analysisResult = languageServer.position(position(15, 14)).get();
+        // TODO/WARNING: 8 vs. 9
+        checkAnalysisResult(analysisResult, "public int doStuff()", 5, 15, Arrays.asList(15, 8));
     }
 
-    private void checkAnalyzisResult(AnalyzisResult actual, String toolTip,
+    private void checkAnalysisResult(AnalysisResult actual, String toolTip,
                                      int declLine, int declColumn,
                                      List<Integer> refLineColumns) {
         assertEquals(actual.getToolTip(), toolTip);
         assertEquals(actual.getDeclarationPosition(), position(declLine, declColumn));
 
-        final List<Integer> actualLineColumRefs = actual.getReferencePositions().stream()
+        final List<Pair<Integer, Integer>> refLineColumnPairs = actual.getReferencePositions().stream()
                 .map(this::lineColumn)
-                .flatMap(pair -> Stream.of(pair.getLeft(), pair.getRight()))
                 .collect(Collectors.toList());
-        assertEquals(actualLineColumRefs, refLineColumns);
+
+        // Transform to set of pair because pair order does not matter
+        assertEquals(refLineColumnPairs, lineColumnPairs(refLineColumns));
+    }
+
+    private Set<Pair<Integer, Integer>> lineColumnPairs(List<Integer> lineColumns) {
+        Set<Pair<Integer, Integer>> lineColumnPairs = new HashSet<>();
+        for (int i = 0; i < lineColumns.size() / 2; i += 2) {
+            lineColumnPairs.add(new ImmutablePair<>(lineColumns.get(i), lineColumns.get(i+1)));
+        }
+        return lineColumnPairs;
     }
 
     private int position(int line, int column) {

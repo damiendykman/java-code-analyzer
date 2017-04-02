@@ -3,7 +3,7 @@ package com.dykman.languageserver;
 import java.util.Collections;
 import java.util.List;
 
-public class AnalyzisResult {
+public class AnalysisResult {
 
     // TODO: can getter be @Nonnull?
 
@@ -15,7 +15,7 @@ public class AnalyzisResult {
         return toolTip;
     }
 
-    public AnalyzisResult setToolTip(String toolTip) {
+    public AnalysisResult setToolTip(String toolTip) {
         this.toolTip = toolTip;
         return this;
     }
@@ -24,7 +24,7 @@ public class AnalyzisResult {
         return declarationPosition;
     }
 
-    public AnalyzisResult setDeclarationPosition(int declarationPosition) {
+    public AnalysisResult setDeclarationPosition(int declarationPosition) {
         this.declarationPosition = declarationPosition;
         return this;
     }
@@ -33,7 +33,7 @@ public class AnalyzisResult {
         return referencePositions;
     }
 
-    public AnalyzisResult setReferencePositions(List<Integer> referencePositions) {
+    public AnalysisResult setReferencePositions(List<Integer> referencePositions) {
         this.referencePositions = referencePositions;
         return this;
     }

@@ -57,7 +57,7 @@ public class LanguageServer {
         }
     }
 
-    public Optional<AnalyzisResult> position(int position) {
+    public Optional<AnalysisResult> position(int position) {
         LeafFinderAstVisitor leafFinderAstVisitor = new LeafFinderAstVisitor(position);
         compilationUnit.accept(leafFinderAstVisitor);
 
@@ -67,15 +67,15 @@ public class LanguageServer {
         return analyzeNode(node);
     }
 
-    private Optional<AnalyzisResult> analyzeNode(ASTNode node) {
-        final AnalyzisResult analyzisResult = new AnalyzisResult();
+    private Optional<AnalysisResult> analyzeNode(ASTNode node) {
+        final AnalysisResult analysisResult = new AnalysisResult();
         if (node instanceof SimpleName) {
             SimpleName simpleName = (SimpleName) node;
             final IBinding binding = simpleName.resolveBinding();
 
             // This is more or less the signature we need (caveat, might have trailing spaces)
             final String signature = binding.toString().trim();
-            analyzisResult.setToolTip(signature);
+            analysisResult.setToolTip(signature);
 
             if (binding instanceof IMethodBinding) {
                 IMethodBinding methodBinding = (IMethodBinding) binding;
@@ -84,17 +84,17 @@ public class LanguageServer {
                 List<Integer> referencePositions = ListUtils.emptyIfNull(methodBindingToRefs.get(methodBinding)).stream()
                         .map(SimpleName::getStartPosition)
                         .collect(Collectors.toList());
-                analyzisResult.setReferencePositions(referencePositions);
+                analysisResult.setReferencePositions(referencePositions);
 
                 // Declaration position
                 Integer declarationPosition = Optional.ofNullable(methodBindingToDeclaration.get(methodBinding))
                         .map(SimpleName::getStartPosition)
                         .orElseThrow(null);
-                analyzisResult.setDeclarationPosition(declarationPosition);
+                analysisResult.setDeclarationPosition(declarationPosition);
             } else {
                 LOGGER.warn("Ignoring binding {}", binding);
             }
-            return Optional.of(analyzisResult);
+            return Optional.of(analysisResult);
         }
 
         throw new IllegalStateException(String.format("Ignoring node %s", node));
