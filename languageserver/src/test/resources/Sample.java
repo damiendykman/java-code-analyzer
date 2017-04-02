@@ -13,6 +13,8 @@ public class Sample {
 
     int someMethod() {
         doStuff();
+        int i = 0;
+            doStuff();
         return 0;
     }
 

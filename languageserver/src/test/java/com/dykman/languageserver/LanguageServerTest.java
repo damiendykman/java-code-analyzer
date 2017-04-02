@@ -29,7 +29,7 @@ public class LanguageServerTest {
     @Test
     public void testMethodInvocation() {
         AnalysisResult analysisResult = languageServer.position(position(15, 14)).get();
-        checkAnalysisResult(analysisResult, "public int doStuff()", 5, 16, Arrays.asList(15, 9));
+        checkAnalysisResult(analysisResult, "public int doStuff()", 5, 16, Arrays.asList(15, 9, 17, 13));
     }
 
     private void checkAnalysisResult(AnalysisResult actual, String toolTip,
@@ -49,7 +49,7 @@ public class LanguageServerTest {
 
     private Set<Pair<Integer, Integer>> lineColumnPairs(List<Integer> lineColumns) {
         Set<Pair<Integer, Integer>> lineColumnPairs = new HashSet<>();
-        for (int i = 0; i < lineColumns.size() / 2; i += 2) {
+        for (int i = 0; i < lineColumns.size(); i += 2) {
             // Offset by 1 (column vs. string index)
             lineColumnPairs.add(new ImmutablePair<>(lineColumns.get(i), lineColumns.get(i + 1) - 1));
         }
