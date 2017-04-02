@@ -46,15 +46,6 @@ public class LanguageServer {
         bindingToRefs = mapperAstVisitor.getBindingToRefs();
     }
 
-    // TODO: move
-    private String sourceFileAsString(File sourceFile) {
-        try {
-            return Files.toString(sourceFile, Charset.defaultCharset());
-        } catch (IOException e) {
-            throw new RuntimeException(String.format("File: '%s' not found", sourceFile.getAbsolutePath()), e);
-        }
-    }
-
     public Optional<AnalysisResult> position(int position) {
         LeafFinderAstVisitor leafFinderAstVisitor = new LeafFinderAstVisitor(position);
         compilationUnit.accept(leafFinderAstVisitor);
