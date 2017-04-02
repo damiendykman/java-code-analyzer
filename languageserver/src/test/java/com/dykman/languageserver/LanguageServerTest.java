@@ -26,9 +26,7 @@ public class LanguageServerTest {
     @Test
     public void testMethodInvocation() {
         AnalyzisResult analyzisResult = languageServer.position(205).get();
-
-        // TODO: cleanup space
-        checkAnalyzisResult(analyzisResult, "public int doStuff() ", 55, Collections.singletonList(202));
+        checkAnalyzisResult(analyzisResult, "public int doStuff()", 55, Collections.singletonList(202));
     }
 
     private void checkAnalyzisResult(AnalyzisResult actual, String toolTip, int declPos, List<Integer> refPos) {
@@ -36,4 +34,7 @@ public class LanguageServerTest {
         assertEquals(actual.getDeclarationPosition(), declPos);
         assertEquals(actual.getReferencePositions(), refPos);
     }
+
+
+
 }
