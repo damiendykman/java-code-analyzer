@@ -42,7 +42,7 @@ public class LanguageServerTest {
         checkAnalysisResult(analysisResult,
                             "public int compareTo(java.lang.Integer)",
                             null,
-                            Arrays.asList(7, 17));
+                            Arrays.asList(8, 19));
     }
 
     @Test
