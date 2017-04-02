@@ -5,8 +5,6 @@ import java.util.List;
 
 public class AnalysisResult {
 
-    // TODO: can getter be @Nonnull?
-
     private String toolTip;
     private Integer declarationPosition;
     private List<Integer> referencePositions = Collections.emptyList();
@@ -20,7 +18,7 @@ public class AnalysisResult {
         return this;
     }
 
-    public int getDeclarationPosition() {
+    public Integer getDeclarationPosition() {
         return declarationPosition;
     }
 

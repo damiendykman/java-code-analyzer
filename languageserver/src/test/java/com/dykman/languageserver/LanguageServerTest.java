@@ -37,7 +37,7 @@ public class LanguageServerTest {
                                      List<Integer> refLineColumns) {
         assertEquals(actual.getToolTip(), toolTip);
         // Offset by 1 (column vs. string index)
-        assertEquals(actual.getDeclarationPosition(), position(declLine, declColumn) - 1);
+        assertEquals(actual.getDeclarationPosition().intValue(), position(declLine, declColumn) - 1);
 
         final List<Pair<Integer, Integer>> actualRefLineColumnPairs = actual.getReferencePositions().stream()
                 .map(this::lineColumn)
