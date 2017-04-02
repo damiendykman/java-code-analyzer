@@ -11,7 +11,8 @@ import static org.testng.Assert.assertEquals;
 public class TestUtils {
 
     /**
-     * Return a position given a line and a column
+     * Return a position given a line and a column.
+     * Using the convention that 1st column is 1 (eg: like Intellij but unlike Emacs)
      */
     public static int position(String str, int line, int column) {
         // WARNING: should check line and column within bounds and throw
@@ -26,6 +27,7 @@ public class TestUtils {
 
     /**
      * Return a line and column given a position
+     * Using the convention that 1st column is 1 (eg: like Intellij but unlike Emacs)
      */
     public static Pair<Integer, Integer> lineColumn(String str, int pos) {
         int line = 1;
