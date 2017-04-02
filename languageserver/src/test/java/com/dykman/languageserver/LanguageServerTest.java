@@ -28,16 +28,32 @@ public class LanguageServerTest {
 
     @Test
     public void testMethodInvocation() {
-        AnalysisResult analysisResult = languageServer.position(position(15, 14)).get();
-        checkAnalysisResult(analysisResult, "public int doStuff()", 5, 16, Arrays.asList(15, 9, 17, 13));
+        AnalysisResult analysisResult;
+
+        // Method invocation of method declared locally
+        analysisResult = languageServer.position(position(15, 14)).get();
+        checkAnalysisResult(analysisResult, "public int doStuff()",
+                            new ImmutablePair<>(5, 16),
+                            Arrays.asList(15, 9, 17, 13));
+
+        // Method invocation of method declared externally
+        analysisResult = languageServer.position(position(8, 13)).get();
+        checkAnalysisResult(analysisResult,
+                            "public int compareTo(java.lang.Integer)",
+                            null,
+                            Arrays.asList(8, 11));
     }
 
     private void checkAnalysisResult(AnalysisResult actual, String toolTip,
-                                     int declLine, int declColumn,
+                                     Pair<Integer, Integer> declLineColum,
                                      List<Integer> refLineColumns) {
         assertEquals(actual.getToolTip(), toolTip);
-        // Offset by 1 (column vs. string index)
-        assertEquals(actual.getDeclarationPosition().intValue(), position(declLine, declColumn) - 1);
+
+        if (declLineColum != null) {
+            // Offset by 1 (column vs. string index)
+            assertEquals(actual.getDeclarationPosition().intValue(),
+                         position(declLineColum.getLeft(), declLineColum.getRight()) - 1);
+        }
 
         final List<Pair<Integer, Integer>> actualRefLineColumnPairs = actual.getReferencePositions().stream()
                 .map(this::lineColumn)

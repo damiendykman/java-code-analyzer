@@ -69,6 +69,7 @@ public class LanguageServer {
 
     private Optional<AnalysisResult> analyzeNode(ASTNode node) {
         final AnalysisResult analysisResult = new AnalysisResult();
+
         if (node instanceof SimpleName) {
             SimpleName simpleName = (SimpleName) node;
             final IBinding binding = simpleName.resolveBinding();
@@ -87,10 +88,9 @@ public class LanguageServer {
                 analysisResult.setReferencePositions(referencePositions);
 
                 // Declaration position
-                Integer declarationPosition = Optional.ofNullable(methodBindingToDeclaration.get(methodBinding))
+                Optional.ofNullable(methodBindingToDeclaration.get(methodBinding))
                         .map(SimpleName::getStartPosition)
-                        .orElseThrow(null);
-                analysisResult.setDeclarationPosition(declarationPosition);
+                        .ifPresent(analysisResult::setDeclarationPosition);
             } else {
                 LOGGER.warn("Ignoring binding {}", binding);
             }
