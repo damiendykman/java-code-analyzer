@@ -67,7 +67,8 @@ public class LanguageServer {
         } else if (node instanceof SimpleName) {
             binding = ((SimpleName) node).resolveBinding();
         } else {
-            throw new IllegalStateException(String.format("Ignoring node %s", node));
+            LOGGER.warn("Ignoring node '{}'", node);
+            return Optional.empty();
         }
 
         // This is more or less the signature we need plus a bunch of stuff
