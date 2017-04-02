@@ -9,12 +9,13 @@ public class Sample {
         return 0;
     }
 
-    int i = 0;
+    String memberStr = "";
 
     int someMethod() {
         doStuff();
         int i = 0;
             doStuff();
+        memberStr = "Not empty";
         return 0;
     }
 

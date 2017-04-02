@@ -70,28 +70,32 @@ public class LanguageServer {
     private Optional<AnalysisResult> analyzeNode(ASTNode node) {
         final AnalysisResult analysisResult = new AnalysisResult();
 
-        if (node instanceof SimpleName) {
-            SimpleName simpleName = (SimpleName) node;
-            final IBinding binding = simpleName.resolveBinding();
+        final IBinding binding;
 
-            // This is more or less the signature we need plus a bunch of stuff
-            final String signature = binding.toString();
-            analysisResult.setToolTip(signature);
-
-            // Reference positions
-            List<Integer> referencePositions = ListUtils.emptyIfNull(bindingToRefs.get(binding)).stream()
-                    .map(SimpleName::getStartPosition)
-                    .collect(Collectors.toList());
-            analysisResult.setReferencePositions(referencePositions);
-
-            // Declaration position
-            Optional.ofNullable(bindingToDeclaration.get(binding))
-                    .map(SimpleName::getStartPosition)
-                    .ifPresent(analysisResult::setDeclarationPosition);
-
-            return Optional.of(analysisResult);
+        // Look for a simple AST node
+        if (node instanceof SimpleType) {
+            binding = ((SimpleType) node).resolveBinding();
+        } else if (node instanceof SimpleName) {
+            binding = ((SimpleName) node).resolveBinding();
+        } else {
+            throw new IllegalStateException(String.format("Ignoring node %s", node));
         }
 
-        throw new IllegalStateException(String.format("Ignoring node %s", node));
+        // This is more or less the signature we need plus a bunch of stuff
+        String signature = binding.toString();
+        analysisResult.setToolTip(signature);
+
+        // Reference positions
+        List<Integer> referencePositions = ListUtils.emptyIfNull(bindingToRefs.get(binding)).stream()
+                .map(SimpleName::getStartPosition)
+                .collect(Collectors.toList());
+        analysisResult.setReferencePositions(referencePositions);
+
+        // Declaration position
+        Optional.ofNullable(bindingToDeclaration.get(binding))
+                .map(SimpleName::getStartPosition)
+                .ifPresent(analysisResult::setDeclarationPosition);
+
+        return Optional.of(analysisResult);
     }
 }

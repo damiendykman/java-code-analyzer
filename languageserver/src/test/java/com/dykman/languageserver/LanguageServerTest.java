@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 public class LanguageServerTest {
@@ -28,21 +29,27 @@ public class LanguageServerTest {
     }
 
     @Test
-    public void testLocalMethodInvocation() {
+    public void testLocalMethod() {
         String actualToolTip = "public int doStuff()";
         Pair<Integer, Integer> actualDeclaration = new ImmutablePair<>(5, 16);
-        List<Integer> actualRefs = Arrays.asList(15, 9, 17, 13, 23, 16);
+        List<Integer> actualRefs = Arrays.asList(15, 9, 17, 13, 24, 16);
 
-        AnalysisResult analysisResult = languageServer.position(position(15, 14)).get();
+        // Declaration
+        AnalysisResult analysisResult = languageServer.position(position(5, 19)).get();
+        checkAnalysisResult(analysisResult, actualToolTip, actualDeclaration, actualRefs);
+
+        // Reference
+        analysisResult = languageServer.position(position(15, 14)).get();
         checkAnalysisResult(analysisResult, actualToolTip, actualDeclaration, actualRefs);
     }
 
     @Test
-    public void testExternalMethodInvocation() {
+    public void testExternalMethod() {
         String actualToolTip = "public int compareTo(java.lang.Integer)";
         Pair<Integer, Integer> actualDeclaration = null;
         List<Integer> actualRefs = Arrays.asList(8, 19);
 
+        // Reference
         AnalysisResult analysisResult = languageServer.position(position(8, 23)).get();
         checkAnalysisResult(analysisResult, actualToolTip, actualDeclaration, actualRefs);
     }
@@ -50,16 +57,30 @@ public class LanguageServerTest {
     @Test
     public void testVariable() {
         String actualToolTip = "java.lang.Integer myInteger";
-        // TODO: shouldn't be null....
-        Pair<Integer, Integer> actualDeclaration = null;
+        Pair<Integer, Integer> actualDeclaration = new ImmutablePair<>(7, 17);
         List<Integer> actualRefs = Arrays.asList(8, 9, 8, 37);
 
-        // Variable declaration
+        // Declaration
         AnalysisResult analysisResult = languageServer.position(position(7, 22)).get();
         checkAnalysisResult(analysisResult, actualToolTip, actualDeclaration, actualRefs);
 
-        // Variable reference
+        // Reference
         analysisResult = languageServer.position(position(8, 12)).get();
+        checkAnalysisResult(analysisResult, actualToolTip, actualDeclaration, actualRefs);
+    }
+
+    @Test
+    public void testMember() {
+        String actualToolTip = "java.lang.String memberStr";
+        Pair<Integer, Integer> actualDeclaration = new ImmutablePair<>(12, 12);
+        List<Integer> actualRefs = Arrays.asList(18, 9);
+
+        // Declaration
+        AnalysisResult analysisResult = languageServer.position(position(12, 17)).get();
+        checkAnalysisResult(analysisResult, actualToolTip, actualDeclaration, actualRefs);
+
+        // Reference
+        analysisResult = languageServer.position(position(18, 15)).get();
         checkAnalysisResult(analysisResult, actualToolTip, actualDeclaration, actualRefs);
     }
 
@@ -67,19 +88,26 @@ public class LanguageServerTest {
     public void testType() {
         String actualToolTip = "public class sample.Sample";
         Pair<Integer, Integer> actualDeclaration = new ImmutablePair<>(3,14);
-        List<Integer> actualRefs = Arrays.asList(22, 9, 22, 29);
+        List<Integer> actualRefs = Arrays.asList(23, 9, 23, 29);
 
-        // Type declaration
+        // Declaration
         AnalysisResult analysisResult = languageServer.position(position(3, 16)).get();
+        checkAnalysisResult(analysisResult, actualToolTip, actualDeclaration, actualRefs);
+
+        // Reference
+        analysisResult = languageServer.position(position(23, 13)).get();
         checkAnalysisResult(analysisResult, actualToolTip, actualDeclaration, actualRefs);
     }
 
     private void checkAnalysisResult(AnalysisResult actual, String toolTip,
                                      Pair<Integer, Integer> declLineColum,
                                      List<Integer> refLineColumns) {
-        assertTrue(actual.getToolTip().contains(toolTip));
+        assertTrue(actual.getToolTip().contains(toolTip),
+                   String.format("'%s' not contained in '%s'", toolTip, actual.getToolTip()));
 
-        if (declLineColum != null) {
+        if (declLineColum == null) {
+            assertNull(actual.getDeclarationPosition());
+        } else {
             // Offset by 1 (column vs. string index)
             assertEquals(actual.getDeclarationPosition().intValue(),
                          position(declLineColum.getLeft(), declLineColum.getRight()) - 1);
