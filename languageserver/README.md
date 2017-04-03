@@ -1,6 +1,6 @@
 # Language server
 
-Given a Java source and a cursor position (location or line:column), it outputs, if applicable:
+Given a Java source file and a cursor position (location or line:column), it returns (when applicable):
 - a tool tip
 - the declaration (in provided source)
 - all the references (in provided source)
