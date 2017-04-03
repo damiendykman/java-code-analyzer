@@ -1,7 +1,7 @@
-package com.dykman.languageserver.core;
+package me.dykman.languageserver.core;
 
-import com.dykman.languageserver.ast.LeafFinderAstVisitor;
-import com.dykman.languageserver.ast.MapperAstVisitor;
+import me.dykman.languageserver.ast.LeafFinderAstVisitor;
+import me.dykman.languageserver.ast.MapperAstVisitor;
 import org.apache.commons.collections4.ListUtils;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.*;
@@ -36,19 +36,26 @@ public class LanguageServer {
 
         parser.setSource(source.toCharArray());
 
+        // Build AST
         compilationUnit = (CompilationUnit) parser.createAST(null);
 
+        // Use visitor on AST to build:
+        // - a map: node -> declaration
+        // - a map: node -> references
         MapperAstVisitor mapperAstVisitor = new MapperAstVisitor();
         compilationUnit.accept(mapperAstVisitor);
+
+        // Retrieve maps created during visit
         bindingToDeclaration = mapperAstVisitor.getBindingToDeclaration();
         bindingToRefs = mapperAstVisitor.getBindingToRefs();
     }
 
     public Optional<AnalysisResult> position(int position) {
+        // User visitor to find the leaf corresponding to this position
         LeafFinderAstVisitor leafFinderAstVisitor = new LeafFinderAstVisitor(position);
         compilationUnit.accept(leafFinderAstVisitor);
 
-        // Get deepest AST node for position
+        // Get deepest AST node (leaf) for position
         final ASTNode node = leafFinderAstVisitor.getLeafNode();
 
         return analyzeNode(node);

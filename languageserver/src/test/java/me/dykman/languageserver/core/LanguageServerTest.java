@@ -1,6 +1,6 @@
-package com.dykman.languageserver.core;
+package me.dykman.languageserver.core;
 
-import com.dykman.languageserver.util.PositionUtil;
+import me.dykman.languageserver.util.PositionUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;

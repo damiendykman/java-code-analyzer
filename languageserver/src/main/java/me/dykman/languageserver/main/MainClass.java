@@ -1,8 +1,8 @@
-package com.dykman.languageserver.main;
+package me.dykman.languageserver.main;
 
-import com.dykman.languageserver.core.AnalysisResult;
-import com.dykman.languageserver.core.LanguageServer;
-import com.dykman.languageserver.util.PositionUtil;
+import me.dykman.languageserver.core.AnalysisResult;
+import me.dykman.languageserver.core.LanguageServer;
+import me.dykman.languageserver.util.PositionUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

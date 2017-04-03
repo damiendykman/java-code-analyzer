@@ -1,4 +1,4 @@
-package com.dykman.languageserver.ast;
+package me.dykman.languageserver.ast;
 
 import org.eclipse.jdt.core.dom.*;
 

@@ -1,4 +1,4 @@
-package com.dykman.languageserver.core;
+package me.dykman.languageserver.core;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.dykman.languageserver.util;
+package me.dykman.languageserver.util;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.testng.annotations.Test;
