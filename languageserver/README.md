@@ -57,6 +57,9 @@ The parsing of the Java source into an AST (Abstract Syntax Tree) is done via `o
 The tool tip is created by using `toString()` of the AST node binding. In the case of a method, it's more or less what we want (though package is missing) but in the case of a type (eg: `class Sample ...`), it contains many unnecessary details for a tool tip. A proper approach would be to individually retrieve (available in binding):
   - package name
   - modifier
+  - type
+  - entity name
+  - parameter types (if method)
   - etc
 
 The tool tip does not include any _Javadoc_ at this point.
