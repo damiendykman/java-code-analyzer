@@ -18,7 +18,8 @@ import java.util.Optional;
  */
 public class MainClass {
 
-    private static ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+    // Json pretty printer
+    private static final ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
     private static void usage(String msg) {
         System.err.println(msg);

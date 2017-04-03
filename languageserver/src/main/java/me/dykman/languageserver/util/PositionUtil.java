@@ -18,7 +18,7 @@ public class PositionUtil {
         // WARNING: should check line and column within bounds and throw
 
         // Sum the lengths of the lines above cursor
-        int fullLineOffset = Arrays.asList(str.split("\n")).stream()
+        int fullLineOffset = Arrays.stream(str.split("\n"))
                 .limit(line - 1)
                 .mapToInt(l -> l.length() + 1) // Adding '\n' to each line
                 .sum();
