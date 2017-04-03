@@ -63,4 +63,4 @@ For every position, the tree is entirely DFS traversed to get the corresponding 
   - stop once leaf has been found
 
 ##### 3. Avoid AST traversing
-...
+Instead of traversing the AST tree for each location, a Binary Search Tree could be built intially. This would allow efficient access to entity information for each given location.
