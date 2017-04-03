@@ -2,7 +2,9 @@ package me.dykman.languageserver.ast;
 
 import org.eclipse.jdt.core.dom.*;
 
-
+/**
+ * AST visitor to find the leaf pointed by a location
+ */
 public class LeafFinderAstVisitor extends ASTVisitor {
 
     private final int position;
@@ -19,7 +21,6 @@ public class LeafFinderAstVisitor extends ASTVisitor {
 
     @Override
     public void preVisit(ASTNode node) {
-        // TODO: check edge cases
         if (bestNode == null && node.getLength() < position) {
             // Break early
             throw new RuntimeException(String.format("position too big: %s (length = %s)",

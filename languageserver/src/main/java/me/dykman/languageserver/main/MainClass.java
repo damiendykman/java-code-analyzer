@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Optional;
 
+/**
+ * Main class (to be ran using java -jar ...)
+ */
 public class MainClass {
 
     private static ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);

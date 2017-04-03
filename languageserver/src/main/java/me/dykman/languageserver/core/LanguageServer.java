@@ -13,6 +13,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * The language server (thought not a server for say). It will:
+ * - analyze Java source code (init)
+ * - provide relevant information for each cursor location provided
+ */
 public class LanguageServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LanguageServer.class);

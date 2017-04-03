@@ -23,9 +23,4 @@ public class Sample {
         Sample sample = new Sample();
         sample.doStuff();
     }
-
-    // Supported:
-    // - variable
-    // - type
-    // - method
 }

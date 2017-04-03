@@ -5,7 +5,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Arrays;
 
-
+/**
+ * Util class to convert a position in a file to and from line & column.
+ */
 public class PositionUtil {
 
     /**

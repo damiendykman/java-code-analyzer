@@ -3,6 +3,9 @@ package me.dykman.languageserver.core;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * View used as output payload for the LanguageServer
+ */
 public class AnalysisResult {
 
     private String toolTip;

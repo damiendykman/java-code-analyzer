@@ -6,6 +6,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+/**
+ * AST visitor to create the following maps:
+ * - binding to declaration (if any)
+ * - binding to reference nodes
+ */
 public class MapperAstVisitor extends ASTVisitor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MapperAstVisitor.class);
@@ -45,18 +50,6 @@ public class MapperAstVisitor extends ASTVisitor {
             LOGGER.warn("Unsupported binding: {}", binding);
         }
 
-        return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(ClassInstanceCreation node) {
-        // TODO: needed?
-        return super.visit(node);
-    }
-
-    @Override
-    public boolean visit(VariableDeclarationFragment node) {
-        // TODO: needed?
         return super.visit(node);
     }
 }
