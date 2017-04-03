@@ -1,6 +1,6 @@
 # Language server
 
-It analyzes a Java file and given a cursor position, it outputs, if applicable:
+Given a Java source and a cursor position (location or line:column), it outputs, if applicable:
 - a tool tip
 - the declaration (in provided source)
 - all the references (in provided source)
@@ -46,7 +46,9 @@ $ mvn clean verify
 ## Details
 
 ### Implementation
-The parsing of the Java source into an AST is done via `org.eclipse.jdt`. Once the AST is built, 
+The parsing of the Java source into an AST is done via `org.eclipse.jdt`. Once the AST is built, it is traversed:
+- once to build the map of declarations and references
+- for each provided location to find the corresponding entity
 
 ### Short comings
 
