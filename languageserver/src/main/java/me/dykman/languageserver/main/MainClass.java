@@ -22,7 +22,7 @@ public class MainClass {
 
     private static void usage(String msg) {
         System.err.println(msg);
-        System.err.println("Usage: ... <LOCATION>|<LINE:COLUM> <JAVA_FILE_PATH>");
+        System.err.println("Usage: ... <LOCATION>|<LINE:COLUMN> <JAVA_FILE_PATH>");
         System.err.println("   example: java -jar language-server-x.y.jar 60 /tmp/Sample.java");
         System.err.println("   example: java -jar language-server-x.y.jar 5:19 /tmp/Sample.java");
         System.exit(1);

@@ -52,8 +52,8 @@ The parsing of the Java source into an AST is done via `org.eclipse.jdt`. Once t
 
 ### Short comings
 
-##### 1. Tootip
-The tool tip is created by using `toString()` of the AST node binding. In the case of a method, it's more or less what we want (though package is missing) but in the case of a type (eg: `class Sample ...`), it contains many uncessary details. A proper approach would be to individualy retrieve (available in binding):
+##### 1. Tool tip
+The tool tip is created by using `toString()` of the AST node binding. In the case of a method, it's more or less what we want (though package is missing) but in the case of a type (eg: `class Sample ...`), it contains many unnecessary details. A proper approach would be to individually retrieve (available in binding):
   - package name
   - modifier
   - etc
@@ -65,4 +65,4 @@ For every position, the tree is entirely DFS traversed to get the corresponding 
   - stop once leaf has been found
 
 ##### 3. Avoid AST traversing
-Instead of traversing the AST tree for each location, a Binary Search Tree could be built intially. This would allow efficient access to entity information for each given location.
+Instead of traversing the AST tree for each location, a Binary Search Tree could be built initially. This would allow efficient access to entity information for each given location.
